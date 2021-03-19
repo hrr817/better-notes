@@ -1,20 +1,52 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import store from './redux/store'
-import { ChakraProvider } from '@chakra-ui/react'
 import reportWebVitals from './reportWebVitals';
+import { ChakraProvider } from '@chakra-ui/react'
 
-import App from './App';
+import Loading from './components/Loading'
 import Modals from './components/Modals'
-
+import Home from './routes/Home'
+import Profile from './routes/Profile'
+import ContentNotFound from './routes/404'
 import './styles/main.css'
+
+import Navbar from './components/Navbar'
+
+import { auth, selectAuthUser, selectLoading } from './redux/features/authSlice'
+
+const Routes = () => {
+
+  const dispatch = useDispatch()
+  const authUser = useSelector(selectAuthUser)
+  const { authLoading } = useSelector(selectLoading)
+  
+  if(authUser.authenticated && !authUser.data) { // If user is authenticated and user data is not saved in redux
+    dispatch(auth())
+  }
+  
+  if(authLoading) return <Loading />
+
+  return (
+    <BrowserRouter>
+      <Switch>
+        <Route path="/" component={Home} exact/>
+        <Route path="/@:username" component={Profile} exact/>
+        <Route path="*" component={ContentNotFound} exact/>
+      </Switch>
+    </BrowserRouter>
+  )
+}
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <ChakraProvider>
-        <App />
+        <Navbar />
+        <Routes />
         <Modals />
       </ChakraProvider>
     </Provider>

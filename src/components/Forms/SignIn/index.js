@@ -76,6 +76,7 @@ const SignIn = ({ changeForm }) => {
                     bg="blackAlpha.700"
                     color="whiteAlpha.800"
                     isLoading={signInLoading}
+                    disabled={signInLoading}
                     loadingText="Signing in"> Sign In </Input>
           </ModalFooter>
           </form>

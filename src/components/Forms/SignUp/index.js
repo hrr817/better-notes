@@ -15,6 +15,7 @@ import  {
   Spacer,
   Link
 } from '@chakra-ui/react'
+import { signUpSaga } from '../../../redux/sagas/signUpSaga';
 
 const usernameRegex = /^[a-zA-Z0-9]+$/
 const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -114,6 +115,7 @@ const SignUp = ({ changeForm }) => {
                     bg="blackAlpha.700"
                     color="whiteAlpha.800"
                     isLoading={signUpLoading}
+                    disabled={signUpLoading}
                     loadingText="Signing up"> Sign Up </Input>
           </ModalFooter>
           </form>

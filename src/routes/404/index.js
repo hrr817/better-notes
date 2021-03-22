@@ -5,13 +5,12 @@ const ContentNotFound = () => {
      return (
           <Box 
                p="4" m="4"
-               color="red.400" 
                bg="blackAlpha.300" 
                borderRadius="10" 
                textAlign="center"
           >
-               <Heading>404</Heading>
-               <Text>
+               <Heading color="red.500" >404</Heading>
+               <Text color="whiteAlpha.600" >
                     Page not found :(
                </Text>
           </Box>

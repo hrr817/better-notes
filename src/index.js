@@ -11,6 +11,8 @@ import Loading from './components/Loading'
 import Modals from './components/Modals'
 import Home from './routes/Home'
 import Profile from './routes/Profile'
+import Editor from './routes/Editor'
+import Viewer from './routes/Viewer'
 import ContentNotFound from './routes/404'
 import './styles/main.css'
 
@@ -32,9 +34,12 @@ const Routes = () => {
 
   return (
     <BrowserRouter>
+      <Navbar />
       <Switch>
         <Route path="/" component={Home} exact/>
         <Route path="/@:username" component={Profile} exact/>
+        <Route path="/editor" component={Editor} exact/>
+        <Route path="/viewer/:id" component={Viewer} exact/>
         <Route path="*" component={ContentNotFound} exact/>
       </Switch>
     </BrowserRouter>
@@ -45,7 +50,6 @@ ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <ChakraProvider>
-        <Navbar />
         <Routes />
         <Modals />
       </ChakraProvider>

@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { showModal, removeModal } from '../../redux/features/modalSlice'
 import { selectAuthUser, signOut, selectLoading } from '../../redux/features/authSlice'
-import { Link, Flex, Box, Heading, Spacer, Button, Menu, MenuGroup, MenuButton, Avatar, MenuList, MenuItem, MenuDivider, Spinner} from '@chakra-ui/react'
+import { Flex, Box, Heading, Spacer, Button, Menu, MenuGroup, MenuButton, Avatar, MenuList, MenuItem, MenuDivider, Spinner} from '@chakra-ui/react'
 import SwitchForm from '../Forms/SwitchForm'
 
 const Navbar = () => {
@@ -26,7 +27,7 @@ const Navbar = () => {
                <Box p="6">
                     <Heading 
                          as={Link} 
-                         href="/"
+                         to="/"
                          size="md" 
                          color="whiteAlpha.700"
                     >

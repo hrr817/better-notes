@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { selectAuthUser } from '../../redux/features/authSlice'
-import { Avatar, Container, Flex, Spinner, Box, Spacer, Link } from '@chakra-ui/react'
+import { Avatar, Container, Flex, Spinner, Box, Spacer, Link, Button, IconButton, Icon } from '@chakra-ui/react'
+import { ChatIcon, NotAllowedIcon, AddIcon } from '@chakra-ui/icons'
 import axios from 'axios'
 
 const dummyData = {
@@ -130,10 +131,15 @@ const Profile = ({ match }) => {
                     <Spacer />
                     <Box color="yellowgreen" textTransform="capitalize"> { userData.gender || 'Unknown' } </Box>
                </Flex>
-               <Flex alignItems="center">
+               <Flex alignItems="center" pb="2">
                     <Box color="whiteAlpha.800"> Email </Box>
                     <Spacer />
                     <Box color="yellowgreen"> { userData.email } </Box>
+               </Flex>
+               <Flex alignItems="center" justifyContent="center" mt="4">
+                    <IconButton icon={<NotAllowedIcon />} aria-label="Block" colorScheme="red" mr="4"/>
+                    <IconButton icon={<ChatIcon />} aria-label="Message" colorScheme="green" mr="4"/>
+                    <IconButton icon={<AddIcon />} size="md" aria-label="Follow" colorScheme="pink"/>
                </Flex>
           </Box>    
      )

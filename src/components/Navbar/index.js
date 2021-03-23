@@ -43,7 +43,7 @@ const Navbar = () => {
                          <MenuList mr="3">
                               <MenuGroup title={authUser.data.username} fontSize="medium" textTransform="capitalize">
                                    <MenuItem>My Notes</MenuItem>
-                                   <MenuItem>Account</MenuItem>
+                                   <MenuItem as={Link} to={'/@' + authUser.data.username}>Account</MenuItem>
                               </MenuGroup>
                               <MenuDivider />
                               <MenuItem onClick={() => dispatch(signOut())}> Sign Out </MenuItem>

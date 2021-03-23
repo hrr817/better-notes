@@ -1,34 +1,70 @@
-import React from 'react'
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect } from 'react'
 import axios from 'axios'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { selectAuthUser } from '../../redux/features/authSlice'
+import { 
+     getCurrentNote, selectCurrentNote, clearCurrentNote, selectNotesLoading,
+     createNote, updateNote,
+     selectNotesErrors
+} from '../../redux/features/notesSlice'
 import { Textarea, IconButton, Box } from '@chakra-ui/react'
 import { CheckIcon } from '@chakra-ui/icons'
+import Loading from '../../components/Loading'
 
-const Editor = ({ history }) => {
+const Editor = ({ history, match }) => {
+     const { id } = match.params
+     const dispatch = useDispatch()
 
      const authUser = useSelector(selectAuthUser)
-     const textareaRef = React.useRef()
+     const currentNote = useSelector(selectCurrentNote)
+     const { currentNoteError } = useSelector(selectNotesErrors)
+     const { currentNoteLoading, createNoteLoading } = useSelector(selectNotesLoading)
 
-     const submitHandler = () => {
-          const text = textareaRef.current.value
-          
+     const [text, setText] = React.useState('')
+
+     useEffect(() => {
+          if(id && !currentNote) dispatch(getCurrentNote(id))
+
+          return () => dispatch(clearCurrentNote())
+     }, [])
+
+     useEffect(() => {
+          if(currentNote) setText(currentNote.note)
+     }, [currentNote])
+
+     const editHandler = () => {
           if(!text) return 
 
-          axios.post('http://localhost:9090/notes/create', {
-                    note: text,
-                    author: {
-                         id: authUser.data._id,
-                         name: authUser.username,
-                    }
+          axios.post(`http://localhost:9090/notes/${id}/update`, {
+                    note: text
                },
                { headers: { "Authorization": `Bearer ${authUser.token}` },
           }).then(res => {
-               // console.log(res);
+               console.log(res);
                history.push("/")
           })
           .catch(({response}) => console.log(response))
      }
+
+     const createHandler = () => {
+          if(!text) return 
+
+          const newNote = {
+               note: text,
+               author: {
+                    id: authUser.data._id,
+                    name: authUser.username,
+               }
+          }
+
+          dispatch(createNote(newNote))
+          if(!createNoteLoading && !currentNoteError) {
+               setTimeout(() => history.push('/'), 200)
+          }
+     }
+
+     if(currentNoteLoading) return <Loading />
 
      if(!authUser.authenticated) return (
      <Box 
@@ -46,7 +82,7 @@ const Editor = ({ history }) => {
      </Box>)
 
      return (
-          <form style={{ padding: '0.5rem', height: "85vh"}}>
+          <form style={{ padding: '0.2rem', height: "100%"}}>
                <Textarea 
                     p="2"
                     color="whiteAlpha.800"
@@ -56,13 +92,15 @@ const Editor = ({ history }) => {
                     border="none"
                     focusBorderColor="transparent"
                     resize="none"
-                    ref={textareaRef}
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                    disabled={createNoteLoading}
                     autoFocus
                     required
                />
                <span className="floating-bottom-right">
                     <IconButton
-                         onClick={submitHandler}
+                         onClick={id? editHandler : createHandler}
                          mb="3"
                          mr="3"
                          size="lg"

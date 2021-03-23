@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { selectAuthUser } from '../../redux/features/authSlice'
-import { Avatar, Container, Flex, Spinner, Box, Spacer, Link, Button, IconButton, Icon } from '@chakra-ui/react'
+import { Avatar, Container, Flex, Spinner, Box, Spacer, Link, IconButton } from '@chakra-ui/react'
 import { ChatIcon, NotAllowedIcon, AddIcon } from '@chakra-ui/icons'
 import axios from 'axios'
 

@@ -1,36 +1,30 @@
-import React from 'react'
-import axios from 'axios'
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
-import { useSelector } from 'react-redux'
-import { selectAuthUser } from '../../redux/features/authSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { getUserNotes, selectUserNotes, selectNotesLoading, setCurrentNote } from '../../redux/features/notesSlice'
 import { Wrap, WrapItem, Box } from '@chakra-ui/react'
 import Loading from '../Loading'
 
-// import './style.css'
-
 const NotesList = () => {
-     const authUser = useSelector(selectAuthUser)
-     const [notes, setNotes] = React.useState()
+     const dispatch = useDispatch()
+     const userNotes = useSelector(selectUserNotes)
+     const { userNotesLoading } = useSelector(selectNotesLoading)
 
      const history = useHistory()
 
-     React.useEffect(() => {     
-          axios.get('http://localhost:9090/notes', { headers: { "Authorization": `Bearer ${authUser.token}` }})
-          .then(res => {
-               // console.log(res); 
-               setNotes(res.data)
-          })
-          .catch(({ response }) => console.log(response))
-
+     useEffect(() => {
+          if(!userNotes.length) dispatch(getUserNotes())
      }, [])
 
-     const clickHandler = (id) => {
-          history.push('/viewer/' + id)
+     const clickHandler = (data) => {
+          dispatch(setCurrentNote(data))
+          history.push('/view/' + data._id)
      }
 
-     if(!notes) return <Loading />
+     if(userNotesLoading) return <Loading />
 
-     if(!notes.length) return (
+     if(!userNotes.length) return (
      <Box 
           p="4"
           margin="auto"
@@ -57,7 +51,7 @@ const NotesList = () => {
           justify="center"
           spacing="4"
           >
-          { notes.map(data => 
+          { userNotes.map(data => 
                <WrapItem 
                key={ data._id }
                p="1.5"
@@ -73,7 +67,7 @@ const NotesList = () => {
                cursor="pointer"
                bg="white"
                borderRadius="12"
-               onClick={() => clickHandler(data._id)}> 
+               onClick={() => clickHandler(data)}> 
                { data.note }
                </WrapItem> 
           )}

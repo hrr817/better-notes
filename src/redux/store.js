@@ -8,6 +8,7 @@ import rootSaga from './sagas'
 import modalsReducer from './features/modalSlice'
 import authReducer from './features/authSlice'
 import usersReducer from './features/usersSlice'
+import notesReducer from './features/notesSlice'
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -15,6 +16,7 @@ export default configureStore({
      reducer: { 
           auth: authReducer,
           users: usersReducer,
+          notes: notesReducer,
           modals: modalsReducer,
      },
      middleware: [sagaMiddleware],

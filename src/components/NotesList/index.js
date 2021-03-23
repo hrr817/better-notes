@@ -13,8 +13,6 @@ const NotesList = () => {
 
      const history = useHistory()
 
-     console.log(userNotes)
-
      useEffect(() => {
           if(!userNotes.length) dispatch(getUserNotes())
      }, [])

@@ -1,9 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { selectAuthUser } from '../../redux/features/authSlice'
-import { selectCurrentNote, selectNotesLoading } from '../../redux/features/notesSlice'
+import { getCurrentNote, selectCurrentNote, clearCurrentNote, selectNotesLoading } from '../../redux/features/notesSlice'
 import Loading from '../../components/Loading'
 import { IconButton, Box } from '@chakra-ui/react'
 import { EditIcon } from '@chakra-ui/icons'
@@ -11,29 +11,18 @@ import { EditIcon } from '@chakra-ui/icons'
 import './style.css'
 
 const Viewer = ({ match }) => {
+     const dispatch = useDispatch()
      const authUser = useSelector(selectAuthUser)
      const currentNote = useSelector(selectCurrentNote)
      const { currentNoteLoading } = useSelector(selectNotesLoading)
 
-     console.log(currentNote)
-
      const { id } = match.params
 
      useEffect(() => {
+          if(!currentNote) dispatch(getCurrentNote(id))
 
+          return () => dispatch(clearCurrentNote())
      }, [])
-
-     // React.useEffect(() => {
-     //      if(authUser.authenticated && id) {
-     //           axios.get(`http://localhost:9090/notes/${id}`, 
-     //                { headers: { "Authorization": `Bearer ${authUser.token}` },
-     //           }).then(res => {
-     //                // console.log(res);
-     //                // setNoteData(res.data)
-     //           })
-     //           .catch(({response}) => console.log(response))
-     //      }
-     // }, [authUser.authenticated, authUser.token, id, match.params])
 
      if(currentNoteLoading) return <Loading />
 
@@ -55,7 +44,7 @@ const Viewer = ({ match }) => {
      return (
           <div style={{ padding: '0.5rem', maxWidth: '1000px', margin: 'auto' }}>
                <pre className="format-text">
-                    { currentNote.note }
+                    { currentNote && currentNote.note }
                </pre>
                <span className="floating-bottom-right">
                     <IconButton

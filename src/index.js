@@ -39,7 +39,7 @@ const Routes = () => {
         <Route path="/" component={Home} exact/>
         <Route path="/@:username" component={Profile} exact/>
         <Route path="/editor" component={Editor} exact/>
-        <Route path="/editor" component={Editor} exact/>
+        <Route path="/editor/:id" component={Editor} exact/>
         <Route path="/view/:id" component={Viewer} exact/>
         <Route path="*" component={ContentNotFound} exact/>
       </Switch>

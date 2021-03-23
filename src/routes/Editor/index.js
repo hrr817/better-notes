@@ -1,29 +1,37 @@
-import React from 'react'
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect } from 'react'
 import axios from 'axios'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { selectAuthUser } from '../../redux/features/authSlice'
+import { 
+     getCurrentNote, selectCurrentNote, clearCurrentNote, selectNotesLoading,
+     createNote, updateNote,
+     selectNotesErrors
+} from '../../redux/features/notesSlice'
 import { Textarea, IconButton, Box } from '@chakra-ui/react'
 import { CheckIcon } from '@chakra-ui/icons'
 import Loading from '../../components/Loading'
 
 const Editor = ({ history, match }) => {
+     const { id } = match.params
+     const dispatch = useDispatch()
 
      const authUser = useSelector(selectAuthUser)
+     const currentNote = useSelector(selectCurrentNote)
+     const { currentNoteError } = useSelector(selectNotesErrors)
+     const { currentNoteLoading, createNoteLoading } = useSelector(selectNotesLoading)
+
      const [text, setText] = React.useState('')
 
-     const { id } = match.params
+     useEffect(() => {
+          if(id && !currentNote) dispatch(getCurrentNote(id))
 
-     React.useEffect(() => {
-          if(authUser.authenticated && id) {
-               axios.get(`http://localhost:9090/notes/${id}`, 
-                    { headers: { "Authorization": `Bearer ${authUser.token}` },
-               }).then(res => {
-                    // console.log(res);
-                    setText(res.data.note)
-               })
-               .catch(({response}) => console.log(response))
-          }
-     }, [authUser.authenticated, authUser.token, id, match.params])
+          return () => dispatch(clearCurrentNote())
+     }, [])
+
+     useEffect(() => {
+          if(currentNote) setText(currentNote.note)
+     }, [currentNote])
 
      const editHandler = () => {
           if(!text) return 
@@ -42,22 +50,21 @@ const Editor = ({ history, match }) => {
      const createHandler = () => {
           if(!text) return 
 
-          axios.post('http://localhost:9090/notes/create', {
-                    note: text,
-                    author: {
-                         id: authUser.data._id,
-                         name: authUser.username,
-                    }
-               },
-               { headers: { "Authorization": `Bearer ${authUser.token}` },
-          }).then(res => {
-               // console.log(res);
-               history.push("/")
-          })
-          .catch(({response}) => console.log(response))
+          const newNote = {
+               note: text,
+               author: {
+                    id: authUser.data._id,
+                    name: authUser.username,
+               }
+          }
+
+          dispatch(createNote(newNote))
+          if(!createNoteLoading && !currentNoteError) {
+               setTimeout(() => history.push('/'), 200)
+          }
      }
 
-     if(id && !text) return <Loading />
+     if(currentNoteLoading) return <Loading />
 
      if(!authUser.authenticated) return (
      <Box 
@@ -75,7 +82,7 @@ const Editor = ({ history, match }) => {
      </Box>)
 
      return (
-          <form style={{ padding: '0.5rem', height: "85vh"}}>
+          <form style={{ padding: '0.2rem', height: "100%"}}>
                <Textarea 
                     p="2"
                     color="whiteAlpha.800"
@@ -87,6 +94,7 @@ const Editor = ({ history, match }) => {
                     resize="none"
                     value={text}
                     onChange={(e) => setText(e.target.value)}
+                    disabled={createNoteLoading}
                     autoFocus
                     required
                />

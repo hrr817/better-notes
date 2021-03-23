@@ -15,16 +15,20 @@ html, body, #root {
      z-index: 99;
 }
 
-*::-webkit-scrollbar {
+body::-webkit-scrollbar {
+     width: 0;
+}
+
+body > *::-webkit-scrollbar {
      width: 0.5rem;
 }
 
-*::-webkit-scrollbar-track {
+body > *::-webkit-scrollbar-track {
      background-color: #dbdbdb;
      border-radius: 0.2rem;
 }
 
-*::-webkit-scrollbar-thumb {
+body > *::-webkit-scrollbar-thumb {
      background-color: #1d1d1d;
      border-radius: 0.2rem;
 }

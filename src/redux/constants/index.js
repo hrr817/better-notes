@@ -14,6 +14,10 @@ export const _GET_USER_NOTES = "notes/getUserNotes"
 export const _GET_USER_NOTES_SUCCESS = "notes/getUserNotesSuccess"
 export const _GET_USER_NOTES_FAIL = "notes/getUserNotesFail"
 
-export const _GET_CURRENT_NOTE = "notes/getCurrentNoteNotes"
+export const _GET_CURRENT_NOTE = "notes/getCurrentNote"
 export const _GET_CURRENT_NOTE_SUCCESS = "notes/getCurrentNoteSuccess"
 export const _GET_CURRENT_NOTE_FAIL = "notes/getCurrentNoteFail"
+
+export const _CREATE_NOTE = "notes/createNote"
+export const _CREATE_NOTE_SUCCESS = "notes/createNoteSuccess"
+export const _CREATE_NOTE_FAIL = "notes/createNoteFail"

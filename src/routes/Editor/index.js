@@ -4,15 +4,42 @@ import { useSelector } from 'react-redux'
 import { selectAuthUser } from '../../redux/features/authSlice'
 import { Textarea, IconButton, Box } from '@chakra-ui/react'
 import { CheckIcon } from '@chakra-ui/icons'
+import Loading from '../../components/Loading'
 
-const Editor = ({ history }) => {
+const Editor = ({ history, match }) => {
 
      const authUser = useSelector(selectAuthUser)
-     const textareaRef = React.useRef()
+     const [text, setText] = React.useState('')
 
-     const submitHandler = () => {
-          const text = textareaRef.current.value
-          
+     const { id } = match.params
+
+     React.useEffect(() => {
+          if(authUser.authenticated && id) {
+               axios.get(`http://localhost:9090/notes/${id}`, 
+                    { headers: { "Authorization": `Bearer ${authUser.token}` },
+               }).then(res => {
+                    // console.log(res);
+                    setText(res.data.note)
+               })
+               .catch(({response}) => console.log(response))
+          }
+     }, [authUser.authenticated, authUser.token, id, match.params])
+
+     const editHandler = () => {
+          if(!text) return 
+
+          axios.post(`http://localhost:9090/notes/${id}/update`, {
+                    note: text
+               },
+               { headers: { "Authorization": `Bearer ${authUser.token}` },
+          }).then(res => {
+               console.log(res);
+               history.push("/")
+          })
+          .catch(({response}) => console.log(response))
+     }
+
+     const createHandler = () => {
           if(!text) return 
 
           axios.post('http://localhost:9090/notes/create', {
@@ -29,6 +56,8 @@ const Editor = ({ history }) => {
           })
           .catch(({response}) => console.log(response))
      }
+
+     if(id && !text) return <Loading />
 
      if(!authUser.authenticated) return (
      <Box 
@@ -56,13 +85,14 @@ const Editor = ({ history }) => {
                     border="none"
                     focusBorderColor="transparent"
                     resize="none"
-                    ref={textareaRef}
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
                     autoFocus
                     required
                />
                <span className="floating-bottom-right">
                     <IconButton
-                         onClick={submitHandler}
+                         onClick={id? editHandler : createHandler}
                          mb="3"
                          mr="3"
                          size="lg"

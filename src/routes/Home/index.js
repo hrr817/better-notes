@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux'
 import { selectAuthUser } from '../../redux/features/authSlice'
 import { Link } from 'react-router-dom'
-import { Container, IconButton } from "@chakra-ui/react"
+import { IconButton } from "@chakra-ui/react"
 import { AddIcon } from '@chakra-ui/icons'
 
 import NotesList from '../../components/NotesList'

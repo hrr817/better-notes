@@ -90,6 +90,6 @@ export const { auth, authSuccess, signIn, signOut, signUp } = authSlice.actions
 
 export const selectAuthUser = state => state.auth.user
 export const selectAuthErrors = state => state.auth.errors
-export const selectLoading = state => state.auth.loading
+export const selectAuthLoading = state => state.auth.loading
 
 export default authSlice.reducer

@@ -18,13 +18,13 @@ import './styles/main.css'
 
 import Navbar from './components/Navbar'
 
-import { auth, selectAuthUser, selectLoading } from './redux/features/authSlice'
+import { auth, selectAuthUser, selectAuthLoading } from './redux/features/authSlice'
 
 const Routes = () => {
 
   const dispatch = useDispatch()
   const authUser = useSelector(selectAuthUser)
-  const { authLoading } = useSelector(selectLoading)
+  const { authLoading } = useSelector(selectAuthLoading)
   
   if(authUser.authenticated && !authUser.data) { // If user is authenticated and user data is not saved in redux
     dispatch(auth())
@@ -39,7 +39,8 @@ const Routes = () => {
         <Route path="/" component={Home} exact/>
         <Route path="/@:username" component={Profile} exact/>
         <Route path="/editor" component={Editor} exact/>
-        <Route path="/viewer/:id" component={Viewer} exact/>
+        <Route path="/editor" component={Editor} exact/>
+        <Route path="/view/:id" component={Viewer} exact/>
         <Route path="*" component={ContentNotFound} exact/>
       </Switch>
     </BrowserRouter>

@@ -1,6 +1,6 @@
 import { put, call, select } from 'redux-saga/effects'
 import axios from 'axios'
-import { authSuccess, authFail } from './actions'
+import { authSuccess, authFail } from '../actions'
 import { selectAuthUser } from '../features/authSlice'
 
 export function* auth() {

@@ -14,3 +14,17 @@ html, body, #root {
      right: 0;
      z-index: 99;
 }
+
+*::-webkit-scrollbar {
+     width: 0.5rem;
+}
+
+*::-webkit-scrollbar-track {
+     background-color: #dbdbdb;
+     border-radius: 0.2rem;
+}
+
+*::-webkit-scrollbar-thumb {
+     background-color: #1d1d1d;
+     border-radius: 0.2rem;
+}

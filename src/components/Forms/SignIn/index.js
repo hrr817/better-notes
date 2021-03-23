@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
-import { signIn, selectLoading, selectAuthErrors } from '../../../redux/features/authSlice'
+import { signIn, selectAuthLoading, selectAuthErrors } from '../../../redux/features/authSlice'
 import  { 
   ModalHeader,
   ModalFooter,
@@ -20,7 +20,7 @@ const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@
 
 const SignIn = ({ changeForm }) => {
      const dispatch = useDispatch()
-     const { signInLoading } = useSelector(selectLoading)
+     const { signInLoading } = useSelector(selectAuthLoading)
      const { signInError } = useSelector(selectAuthErrors)
 
      const { register, handleSubmit, errors } = useForm()

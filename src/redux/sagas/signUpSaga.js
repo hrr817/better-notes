@@ -1,6 +1,6 @@
 import { put, call } from 'redux-saga/effects'
 import axios from 'axios'
-import { signUpSuccessAction, signUpFailAction} from './actions'
+import { signUpSuccessAction, signUpFailAction} from '../actions'
 
 export function* signUpSaga({ payload }) {
      const { username, email, password } = payload

@@ -1,33 +1,41 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 import { selectAuthUser } from '../../redux/features/authSlice'
+import { selectCurrentNote, selectNotesLoading } from '../../redux/features/notesSlice'
 import Loading from '../../components/Loading'
 import { IconButton, Box } from '@chakra-ui/react'
 import { EditIcon } from '@chakra-ui/icons'
 
 import './style.css'
 
-const Viewer = ({ history, match }) => {
+const Viewer = ({ match }) => {
      const authUser = useSelector(selectAuthUser)
-     const [noteData, setNoteData] = React.useState()
+     const currentNote = useSelector(selectCurrentNote)
+     const { currentNoteLoading } = useSelector(selectNotesLoading)
 
-     React.useEffect(() => {
-          const { id } = match.params
-          if(authUser.authenticated && id) {
-               axios.get(`http://localhost:9090/notes/${id}`, 
-                    { headers: { "Authorization": `Bearer ${authUser.token}` },
-               }).then(res => {
-                    // console.log(res);
-                    setNoteData(res.data)
-               })
-               .catch(({response}) => console.log(response))
-          }
-     }, [authUser.authenticated, authUser.token, match.params])
+     console.log(currentNote)
 
-     const buttonHandler = () => {
-          history.push('/editor')
-     }
+     const { id } = match.params
+
+     useEffect(() => {
+
+     }, [])
+
+     // React.useEffect(() => {
+     //      if(authUser.authenticated && id) {
+     //           axios.get(`http://localhost:9090/notes/${id}`, 
+     //                { headers: { "Authorization": `Bearer ${authUser.token}` },
+     //           }).then(res => {
+     //                // console.log(res);
+     //                // setNoteData(res.data)
+     //           })
+     //           .catch(({response}) => console.log(response))
+     //      }
+     // }, [authUser.authenticated, authUser.token, id, match.params])
+
+     if(currentNoteLoading) return <Loading />
 
      if(!authUser.authenticated) return (
      <Box 
@@ -44,16 +52,15 @@ const Viewer = ({ history, match }) => {
           Please sign in first.
      </Box>)
 
-     if(!noteData) return <Loading />
-
      return (
           <div style={{ padding: '0.5rem', maxWidth: '1000px', margin: 'auto' }}>
                <pre className="format-text">
-                    { noteData.note }
+                    { currentNote.note }
                </pre>
                <span className="floating-bottom-right">
                     <IconButton
-                         onClick={buttonHandler}
+                         as={Link}
+                         to={`/editor/${id}`}
                          mb="3"
                          mr="3"
                          size="lg"

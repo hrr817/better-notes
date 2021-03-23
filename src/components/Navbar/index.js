@@ -2,14 +2,14 @@ import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { showModal, removeModal } from '../../redux/features/modalSlice'
-import { selectAuthUser, signOut, selectLoading } from '../../redux/features/authSlice'
+import { selectAuthUser, signOut, selectAuthLoading } from '../../redux/features/authSlice'
 import { Flex, Box, Heading, Spacer, Button, Menu, MenuGroup, MenuButton, Avatar, MenuList, MenuItem, MenuDivider, Spinner} from '@chakra-ui/react'
 import SwitchForm from '../Forms/SwitchForm'
 
 const Navbar = () => {
      const dispatch = useDispatch()
      const authUser = useSelector(selectAuthUser)
-     const { authLoading } = useSelector(selectLoading)
+     const { authLoading } = useSelector(selectAuthLoading)
 
      const signInBtnHandler = () => {
           dispatch(showModal({ name: 'signInModal', component: <SwitchForm /> }))

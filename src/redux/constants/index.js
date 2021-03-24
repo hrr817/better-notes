@@ -21,3 +21,7 @@ export const _GET_CURRENT_NOTE_FAIL = "notes/getCurrentNoteFail"
 export const _CREATE_NOTE = "notes/createNote"
 export const _CREATE_NOTE_SUCCESS = "notes/createNoteSuccess"
 export const _CREATE_NOTE_FAIL = "notes/createNoteFail"
+
+export const _UPDATE_NOTE = "notes/updateNote"
+export const _UPDATE_NOTE_SUCCESS = "notes/updateNoteSuccess"
+export const _UPDATE_NOTE_FAIL = "notes/updateNoteFail"

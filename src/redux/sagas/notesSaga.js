@@ -49,12 +49,14 @@ export function* createNoteSaga({ payload }) {
      }
 }
 
+
 export function* updateNoteSaga({ payload }) {
      const { token } = yield select(selectAuthUser)
      const headers = { "Authorization": `Bearer ${token}` }
 
      try {
-          const res = yield call(axios, `http://localhost:9090/notes/${payload}`, { headers })
+          const res = yield call(axios.post, `http://localhost:9090/notes/${payload.id}/update`, payload.data, { headers })
+          // console.log(res)
           yield put(getCurrentNoteSuccessAction(res.data))
      } catch(err) {
           console.log(err.response)

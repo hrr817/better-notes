@@ -64,8 +64,16 @@ const notesSlice = createSlice({
           }, 
           // Update Note
           updateNote: state => { state.loading.updateNoteLoading = true },
-          updateNoteSuccess: (state) => { state.loading.updateNoteLoading = false }, 
-          updateNoteFail: (state) => { state.loading.updateNoteLoading = false }, 
+          updateNoteSuccess: (state, action) => { 
+               state.userNotes = action.payload
+               state.errors.updateNoteError = false
+               state.loading.updateNoteLoading = false 
+          }, 
+          updateNoteFail: (state, action) => {
+               state.errors.updateNoteError = action.payload
+               state.loading.updateNoteLoading = false 
+          }, 
+          
      },
 })
 

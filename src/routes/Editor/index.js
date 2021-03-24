@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react'
-import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectAuthUser } from '../../redux/features/authSlice'
 import { 
@@ -18,8 +17,8 @@ const Editor = ({ history, match }) => {
 
      const authUser = useSelector(selectAuthUser)
      const currentNote = useSelector(selectCurrentNote)
-     const { currentNoteError } = useSelector(selectNotesErrors)
-     const { currentNoteLoading, createNoteLoading } = useSelector(selectNotesLoading)
+     const { currentNoteError, updateNoteError } = useSelector(selectNotesErrors)
+     const { currentNoteLoading, createNoteLoading, updateNoteLoading } = useSelector(selectNotesLoading)
 
      const [text, setText] = React.useState('')
 
@@ -36,15 +35,17 @@ const Editor = ({ history, match }) => {
      const editHandler = () => {
           if(!text) return 
 
-          axios.post(`http://localhost:9090/notes/${id}/update`, {
+          const temp = {
+               id,
+               data: {
                     note: text
-               },
-               { headers: { "Authorization": `Bearer ${authUser.token}` },
-          }).then(res => {
-               console.log(res);
-               history.push("/")
-          })
-          .catch(({response}) => console.log(response))
+               }
+          }
+
+          dispatch(updateNote(temp))
+          if(!updateNoteLoading && !updateNoteError) {
+               setTimeout(() => history.push('/'), 200)
+          }
      }
 
      const createHandler = () => {
@@ -94,7 +95,7 @@ const Editor = ({ history, match }) => {
                     resize="none"
                     value={text}
                     onChange={(e) => setText(e.target.value)}
-                    disabled={createNoteLoading}
+                    disabled={createNoteLoading || updateNoteLoading}
                     autoFocus
                     required
                />

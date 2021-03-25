@@ -3,13 +3,16 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectAuthUser } from '../../redux/features/authSlice'
 import { 
-     getCurrentNote, selectCurrentNote, clearCurrentNote, selectNotesLoading,
-     createNote, updateNote,
-     selectNotesErrors
+     getCurrentNote, selectCurrentNote, clearCurrentNote, 
+     createNote, updateNote,     
+     selectNotesLoading,
+     selectNotesSuccess,
+     selectNotesErrors,
 } from '../../redux/features/notesSlice'
 import { Textarea, IconButton, Box } from '@chakra-ui/react'
 import { CheckIcon } from '@chakra-ui/icons'
 import Loading from '../../components/Loading'
+import LoadingOverlay from '../../components/LoadingOverlay';
 
 const Editor = ({ history, match }) => {
      const { id } = match.params
@@ -17,8 +20,9 @@ const Editor = ({ history, match }) => {
 
      const authUser = useSelector(selectAuthUser)
      const currentNote = useSelector(selectCurrentNote)
-     const { currentNoteError, updateNoteError } = useSelector(selectNotesErrors)
      const { currentNoteLoading, createNoteLoading, updateNoteLoading } = useSelector(selectNotesLoading)
+     const { createNoteSuccess, updateNoteSuccess } = useSelector(selectNotesSuccess)
+     const { currentNoteError, updateNoteError } = useSelector(selectNotesErrors)
 
      const [text, setText] = React.useState('')
 
@@ -32,7 +36,31 @@ const Editor = ({ history, match }) => {
           if(currentNote) setText(currentNote.note)
      }, [currentNote])
 
-     const editHandler = () => {
+     useEffect(() => {
+          if(createNoteSuccess) {
+               setTimeout(() => history.push('/'), 200)
+          }
+
+          if(updateNoteSuccess) {
+               setTimeout(() => history.push('/view/' + id), 200)
+          }
+     }, [createNoteSuccess, updateNoteSuccess])
+     
+     const createHandler = () => {
+          if(!text) return 
+
+          const newNote = {
+               note: text,
+               author: {
+                    id: authUser.data._id,
+                    name: authUser.data.username,
+               }
+          }
+
+          dispatch(createNote(newNote))
+     }
+
+     const updateHandler = () => {
           if(!text) return 
 
           const temp = {
@@ -43,26 +71,6 @@ const Editor = ({ history, match }) => {
           }
 
           dispatch(updateNote(temp))
-          if(!updateNoteLoading && !updateNoteError) {
-               setTimeout(() => history.push('/'), 200)
-          }
-     }
-
-     const createHandler = () => {
-          if(!text) return 
-
-          const newNote = {
-               note: text,
-               author: {
-                    id: authUser.data._id,
-                    name: authUser.username,
-               }
-          }
-
-          dispatch(createNote(newNote))
-          if(!createNoteLoading && !currentNoteError) {
-               setTimeout(() => history.push('/'), 200)
-          }
      }
 
      if(currentNoteLoading) return <Loading />
@@ -83,8 +91,13 @@ const Editor = ({ history, match }) => {
      </Box>)
 
      return (
-          <form style={{ padding: '0.2rem', height: "100%"}}>
+          <div style={{ height: '100%', position: 'relative' }}>
+          {
+               (createNoteLoading || updateNoteLoading) &&  <LoadingOverlay />
+          }
+          <form style={{ height: '100%', position: 'relative'}}>
                <Textarea 
+                    className="scrollbar"
                     p="2"
                     color="whiteAlpha.800"
                     placeholder="Write something here"
@@ -101,17 +114,18 @@ const Editor = ({ history, match }) => {
                />
                <span className="floating-bottom-right">
                     <IconButton
-                         onClick={id? editHandler : createHandler}
+                         onClick={id? updateHandler : createHandler}
                          mb="3"
                          mr="3"
                          size="lg"
-                         aria-label="Save Note"
+                         aria-label={id? 'Save' : 'Create'}
                          colorScheme="blue"
                          icon={<CheckIcon />}
                          isRound
                     />
                </span>
           </form>
+          </div>
      )
 }
 

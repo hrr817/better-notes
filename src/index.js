@@ -25,7 +25,7 @@ const Routes = () => {
   const dispatch = useDispatch()
   const authUser = useSelector(selectAuthUser)
   const { authLoading } = useSelector(selectAuthLoading)
-  
+
   if(authUser.authenticated && !authUser.data) { // If user is authenticated and user data is not saved in redux
     dispatch(auth())
   }

@@ -1,6 +1,6 @@
 import { put, call, select } from 'redux-saga/effects'
 import axios from 'axios'
-import { authSuccess, authFail } from '../actions'
+import { authSuccessAction, authFailAction } from '../actions'
 import { selectAuthUser } from '../features/authSlice'
 
 export function* auth() {
@@ -9,8 +9,8 @@ export function* auth() {
 
      try {
           const res = yield call(axios, 'http://localhost:9090/auth', { headers })
-          yield put(authSuccess(res.data))
+          yield put(authSuccessAction(res.data))
      } catch(err) {
-          yield put(authFail(err.response.data))
+          yield put(authFailAction(err.response.data))
      }
 }

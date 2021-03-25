@@ -18,7 +18,8 @@ const initialState = {
      },
      errors: {
           signInError: null,
-          signUpError: null
+          signUpError: null,
+          signOutError: null,
      }
 }
 
@@ -40,9 +41,18 @@ const authSlice = createSlice({
                localStorage.removeItem('token')
                state.user.data = null
           },
+          clearAuth: state => {
+               state.user.token = null
+               state.user.authenticated = false
+               state.user.error =  null
+               state.user.data = null
+               localStorage.removeItem('token')
+          },
           // Sign In
           signIn: state => { state.loading.signInLoading = true },
           signInSuccess: (state, action) => {
+
+               console.log(action.payload)
                state.loading.signInLoading = false
                state.user.authenticated = true
                state.user.error =  null
@@ -75,18 +85,18 @@ const authSlice = createSlice({
           // Sign Out
           signOut: state => { 
                state.loading.signOutLoading = false
-               state.user.token = null
-               state.user.authenticated = false
-               state.user.error =  null
-               state.user.data = null
-
-               // remove token in localStorage
-               localStorage.removeItem('token')
+          },
+          signOutSuccess: state => { 
+               state.loading.signOutLoading = false
+          },
+          signOutFail: (state, payload) => { 
+               state.errors.signOutError = payload
+               state.loading.signOutLoading = false
           }
      },
 })
 
-export const { auth, authSuccess, signIn, signOut, signUp } = authSlice.actions
+export const { auth, authSuccess, clearAuth, signIn, signOut, signUp } = authSlice.actions
 
 export const selectAuthUser = state => state.auth.user
 export const selectAuthErrors = state => state.auth.errors

@@ -3,7 +3,9 @@ import axios from 'axios'
 import { 
      getUserNotesSuccessAction, getUserNotesFailAction, 
      getCurrentNoteSuccessAction, getCurrentNoteFailAction,
-     createNoteSuccessAction, createNoteFailAction
+     createNoteSuccessAction, createNoteFailAction,
+     updateNoteSuccessAction, updateNoteFailAction,
+     deleteNoteSuccessAction, deleteNoteFailAction
 } from '../actions'
 import { selectAuthUser } from '../features/authSlice'
 
@@ -41,7 +43,7 @@ export function* createNoteSaga({ payload }) {
 
      try {
           const res = yield call(axios.post, `http://localhost:9090/notes/create`, payload, { headers })
-          console.log(res)
+          // console.log(res)
           yield put(createNoteSuccessAction(res.data.notes))
      } catch(err) {
           console.log(err.response)
@@ -57,23 +59,23 @@ export function* updateNoteSaga({ payload }) {
      try {
           const res = yield call(axios.post, `http://localhost:9090/notes/${payload.id}/update`, payload.data, { headers })
           // console.log(res)
-          yield put(getCurrentNoteSuccessAction(res.data))
+          yield put(updateNoteSuccessAction(res.data.notes))
      } catch(err) {
           console.log(err.response)
-          yield put(getCurrentNoteFailAction(err.response.data))
+          yield put(updateNoteFailAction(err.response.data))
      }
 }
 
 export function* deleteNoteSaga({ payload }) {
-     // const { token } = yield select(selectAuthUser)
-     // const headers = { "Authorization": `Bearer ${token}` }
+     const { token } = yield select(selectAuthUser)
+     const headers = { "Authorization": `Bearer ${token}` }
 
-     // try {
-     //      const res = yield call(axios, `http://localhost:9090/notes/${payload}`, { headers })
-     //      // console.log(res)
-     //      yield put(getCurrentNoteSuccessAction(res.data))
-     // } catch(err) {
-     //      console.log(err.response)
-     //      yield put(getCurrentNoteFailAction(err.response.data))
-     // }
+     try {
+          const res = yield call(axios.post, `http://localhost:9090/notes/${payload.id}/delete`, {}, { headers })
+          // console.log(res)
+          yield put(deleteNoteSuccessAction(res.data.notes))
+     } catch(err) {
+          console.log(err.response)
+          yield put(deleteNoteFailAction(err.response.data))
+     }
 }

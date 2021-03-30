@@ -58,7 +58,7 @@ export function* updateNoteSaga({ payload }) {
 
      try {
           const res = yield call(axios.post, `http://localhost:9090/notes/${payload.id}/update`, payload.data, { headers })
-          // console.log(res)
+          console.log(res)
           yield put(updateNoteSuccessAction(res.data.notes))
      } catch(err) {
           console.log(err.response)

@@ -6,10 +6,17 @@ import { selectAuthUser, signOut, selectAuthLoading } from '../../redux/features
 import { Flex, Box, Heading, Spacer, Button, Menu, MenuGroup, MenuButton, Avatar, MenuList, MenuItem, MenuDivider, Spinner} from '@chakra-ui/react'
 import SwitchForm from '../Forms/SwitchForm'
 
+import { useScrollHook } from '../../customHooks/useScrollHook'
+
+import './style.css'
+
 const Navbar = () => {
      const dispatch = useDispatch()
      const authUser = useSelector(selectAuthUser)
      const { authLoading } = useSelector(selectAuthLoading)
+     const [scrollInfo] = useScrollHook()
+
+     const { scrolledDown } = scrollInfo
 
      const signInBtnHandler = () => {
           dispatch(showModal({ name: 'signInModal', component: <SwitchForm /> }))
@@ -22,8 +29,18 @@ const Navbar = () => {
           }
      }, [authUser, dispatch])
 
+     const navbarProps =  scrolledDown? { className: 'nav-hide'} : {}
+
      return (
-          <Flex bg="blackAlpha.300" alignItems="center">
+          <Flex 
+               position="sticky" 
+               top="0"
+               width="100%" 
+               bg="#323232" 
+               alignItems="center" 
+               transition="transform 0.7s ease"
+               {...navbarProps}
+          >
                <Box p="6">
                     <Heading 
                          as={Link} 

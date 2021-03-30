@@ -6,6 +6,7 @@ import rootSaga from './sagas'
 
 // Reducers
 import modalsReducer from './features/modalSlice'
+import navbarReducer from './features/navbarSlice'
 import authReducer from './features/authSlice'
 import usersReducer from './features/usersSlice'
 import notesReducer from './features/notesSlice'
@@ -18,6 +19,7 @@ export default configureStore({
           users: usersReducer,
           notes: notesReducer,
           modals: modalsReducer,
+          navbar: navbarReducer
      },
      middleware: [sagaMiddleware],
 })

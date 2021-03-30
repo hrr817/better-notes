@@ -63,36 +63,39 @@ const Viewer = ({ history, match }) => {
      </Box>)
 
      return (
-          <div style={{position: 'relative', height: '100%'}}>
-          {deleteNoteLoading && <LoadingOverlay />}
-          <div style={{ maxWidth: '1000px', margin: 'auto' }} className="scrollbar">
-               <pre className="format-text" style={{ padding: '0.5rem'}}>
-                    { currentNote && currentNote.note }
-               </pre>
-               <span className="floating-bottom-right">
-                    {id && <IconButton
-                         onClick={deleteHandler}
-                         mb="3"
-                         mr="3"
-                         size="lg"
-                         aria-label="Delete"
-                         colorScheme="red"
-                         icon={<DeleteIcon />}
-                         isRound
-                    /> }
-                    <IconButton
-                         as={Link}
-                         to={`/editor/${id}`}
-                         mb="3"
-                         mr="3"
-                         size="lg"
-                         aria-label="Edit Note"
-                         colorScheme="blue"
-                         icon={<EditIcon />}
-                         isRound
-                    />
-               </span>
-          </div>
+          <div
+               className="scrollbar"
+               style={{position: 'relative', maxHeight: '100vh', overflowY: 'auto'}}
+          >
+               {deleteNoteLoading && <LoadingOverlay />}
+               <div>
+                    <pre className="format-text" style={{ padding: '0.5rem' }}>
+                         { currentNote && currentNote.note }
+                    </pre>
+                    <span className="floating-bottom-right">
+                         {id && <IconButton
+                              onClick={deleteHandler}
+                              mb="3"
+                              mr="3"
+                              size="lg"
+                              aria-label="Delete"
+                              colorScheme="red"
+                              icon={<DeleteIcon />}
+                              isRound
+                         /> }
+                         <IconButton
+                              as={Link}
+                              to={`/editor/${id}`}
+                              mb="3"
+                              mr="3"
+                              size="lg"
+                              aria-label="Edit Note"
+                              colorScheme="blue"
+                              icon={<EditIcon />}
+                              isRound
+                         />
+                    </span>
+               </div>
           </div>
      )
 }

@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-     shouldShowNavbar: true
+     hide: false
 }
 
 const navbarSlice = createSlice({
@@ -9,16 +9,19 @@ const navbarSlice = createSlice({
      initialState,
      reducers: {
           showNavbar: state => {
-               state.shouldShowNavbar = true
+               state.hide = true
           },
           hideNavbar: state => {
-               state.shouldShowNavbar = false
+               state.hide = false
+          },
+          toggleNavbar: state => {
+               state.hide = !state.hide
           }
      },
 })
 
-export const { showNavbar, hideNavbar } = navbarSlice.actions
+export const { showNavbar, hideNavbar, toggleNavbar } = navbarSlice.actions
 
-export const selectShowNavbar = state => state.navbar
+export const selectNavbarProperties = state => state.navbar
 
 export default navbarSlice.reducer

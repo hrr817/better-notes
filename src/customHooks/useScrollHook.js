@@ -1,26 +1,42 @@
-import { useState, useRef, useEffect,} from 'react'
+import { useState, useRef, useLayoutEffect } from 'react'
 
-const useScrollHook = () => {
+const useScrollHook = (options) => {
+
+     const threshold = (options && options.threshold) || 0 
+
      const prevXY = useRef([0, 0])
-     
-     const [state, setState] = useState({
+
+     const [handlerAdded, setHandlerAdded] = useState(false)
+
+     const [info, setInfo] = useState({
           prevX: 0,
           prevY: 0,
-          y: window.scrollY,
-          x: window.scrollX,
+          y: 0,
+          x: 0,
           scrolledUp: false,
           scrolledRight: false,
           scrolledDown: false,
           scrolledLeft: false,
      })
 
-     const updateState = (e) => {
-          const currentX = e.path[1].scrollX
-          const currentY =  e.path[1].scrollY
+     const onScrollHandler = (e) => {
+          // Check if onScrollHandler is added to some element
+          e.target.scrollTop === undefined ? setHandlerAdded(false) : setHandlerAdded(true)
+
+          let currentX
+          let currentY
+
+          if(handlerAdded) {
+               currentX = e.target.scrollLeft
+               currentY =  e.target.scrollTop
+          } else {
+               currentX = e.path && e.path[1].scrollX
+               currentY = e.path && e.path[1].scrollY
+          }
 
           // Scroll Up
-          if(currentY < prevXY.current[1]) {
-               setState(state => ({
+          if(currentY < prevXY.current[1] - threshold) {
+               setInfo(state => ({
                     ...state, 
                     scrolledUp: true, 
                     scrolledDown: false, 
@@ -29,8 +45,8 @@ const useScrollHook = () => {
           }
 
           // Scroll Down
-          if(currentY > prevXY.current[1]) {
-               setState(state => ({
+          if(currentY > prevXY.current[1] + threshold) {
+               setInfo(state => ({
                     ...state, 
                     scrolledUp: false, 
                     scrolledDown: true, 
@@ -39,8 +55,8 @@ const useScrollHook = () => {
           } 
 
           // Scroll Right
-          if(currentX < prevXY.current[0]) {
-               setState(state => ({
+          if(currentX < prevXY.current[0] - threshold) {
+               setInfo(state => ({
                     ...state, 
                     scrolledRight: true, 
                     scrolledLeft: false, 
@@ -49,8 +65,8 @@ const useScrollHook = () => {
           }
 
           // Scroll Left
-          if(currentX > prevXY.current[0]) {
-               setState(state => ({
+          if(currentX > prevXY.current[0] + threshold) {
+               setInfo(state => ({
                     ...state, 
                     scrolledLeft: true, 
                     scrolledRight: false, 
@@ -62,13 +78,14 @@ const useScrollHook = () => {
           prevXY.current[1] = currentY
      }
 
-     useEffect(() => {
-          window.addEventListener('scroll', updateState)
+     useLayoutEffect(() => {
+          !handlerAdded && document.addEventListener('scroll', onScrollHandler)
 
-          return () => window.removeEventListener('scroll', updateState)
+          return () => !handlerAdded && document.removeEventListener('scroll', onScrollHandler)
+     // eslint-disable-next-line react-hooks/exhaustive-deps
      }, [])
 
-     return [state]
+     return [info, onScrollHandler]
 }
 
 export { useScrollHook }

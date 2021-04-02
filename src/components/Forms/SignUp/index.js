@@ -114,8 +114,7 @@ const SignUp = ({ changeForm }) => {
                     bg="blackAlpha.700"
                     color="whiteAlpha.800"
                     isLoading={signUpLoading}
-                    disabled={signUpLoading}
-                    loadingText="Signing up"> Sign Up </Input>
+                    disabled={signUpLoading}> Sign Up </Input>
           </ModalFooter>
           </form>
      )

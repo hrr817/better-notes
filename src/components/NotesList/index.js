@@ -60,7 +60,7 @@ const NotesList = () => {
                w="100%"
                maxW="300px"
                h="auto"
-               maxH="155px"
+               maxH="150px"
                overflow="hidden"
                whiteSpace="pre-line"
                textOverflow="revert"

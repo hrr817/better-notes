@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import { selectNavbarProperties } from '../../redux/features/navbarSlice'
 import { showModal, removeModal } from '../../redux/features/modalSlice'
 import { selectAuthUser, signOut, selectAuthLoading } from '../../redux/features/authSlice'
 import { Flex, Box, Heading, Spacer, Button, Menu, MenuGroup, MenuButton, Avatar, MenuList, MenuItem, MenuDivider, Spinner} from '@chakra-ui/react'
 import SwitchForm from '../Forms/SwitchForm'
-
-import { useScrollHook } from '../../customHooks/useScrollHook'
 
 import './style.css'
 
@@ -14,9 +13,8 @@ const Navbar = () => {
      const dispatch = useDispatch()
      const authUser = useSelector(selectAuthUser)
      const { authLoading } = useSelector(selectAuthLoading)
-     const [scrollInfo] = useScrollHook()
 
-     const { scrolledDown } = scrollInfo
+     const { hide } = useSelector(selectNavbarProperties)
 
      const signInBtnHandler = () => {
           dispatch(showModal({ name: 'signInModal', component: <SwitchForm /> }))
@@ -29,16 +27,17 @@ const Navbar = () => {
           }
      }, [authUser, dispatch])
 
-     const navbarProps =  scrolledDown? { className: 'nav-hide'} : {}
+     const navbarProps =  hide ? { className: 'nav-hide'} : {}
 
      return (
           <Flex 
-               position="sticky" 
+               position={'sticky'} 
                top="0"
                width="100%" 
                bg="#323232" 
                alignItems="center" 
                transition="transform 0.7s ease"
+               zIndex="9999"
                {...navbarProps}
           >
                <Box p="6">
@@ -73,4 +72,4 @@ const Navbar = () => {
      )
 }
 
-export default Navbar
+export default React.memo(Navbar)

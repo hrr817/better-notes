@@ -16,9 +16,8 @@ import Viewer from './routes/Viewer'
 import ContentNotFound from './routes/404'
 import './styles/main.css'
 
-import Navbar from './components/Navbar'
-
 import { auth, selectAuthUser, selectAuthLoading } from './redux/features/authSlice'
+import Navbar from './components/Navbar';
 
 const Routes = () => {
 

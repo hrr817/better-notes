@@ -18,11 +18,11 @@ const initialState = {
           deleteNoteSuccess: false,
      },
      errors: {
-          userNotesError: false,
-          currentNoteError: false,
-          createNoteError: false,
-          updateNoteError: false,
-          deleteNoteError: false,
+          userNotesError: null,
+          currentNoteError: null,
+          createNoteError: null,
+          updateNoteError: null,
+          deleteNoteError: null,
      },
 }
 
@@ -58,7 +58,7 @@ const notesSlice = createSlice({
           getCurrentNoteFail: (state, action) => {
                state.success.currentNoteSuccess = false
                state.loading.currentNoteLoading = false
-               state.errors.createNoteError = action.payload
+               state.errors.currentNoteError = action.payload
                state.currentNote = null
           },
           clearCurrentNote: state => { 
@@ -85,7 +85,7 @@ const notesSlice = createSlice({
           updateNoteSuccess: (state, action) => { 
                state.success.updateNoteSuccess =  true
                state.userNotes = action.payload
-               state.errors.updateNoteError = false
+               state.errors.updateNoteError = null
                state.loading.updateNoteLoading = false 
           }, 
           updateNoteFail: (state, action) => {
@@ -98,7 +98,7 @@ const notesSlice = createSlice({
           deleteNoteSuccess: (state, action) => { 
                state.success.deleteNoteSuccess = true
                state.userNotes = action.payload
-               state.errors.deleteNoteError = false
+               state.errors.deleteNoteError = null
                state.loading.deleteNoteLoading = false 
           }, 
           deleteNoteFail: (state, action) => {

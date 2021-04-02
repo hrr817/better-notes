@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectAuthUser } from '../../redux/features/authSlice'
+import { showNavbar, hideNavbar } from '../../redux/features/navbarSlice'
 import { 
      getCurrentNote, selectCurrentNote, clearCurrentNote, 
      createNote, updateNote,     
@@ -14,10 +15,13 @@ import { CheckIcon } from '@chakra-ui/icons'
 import Loading from '../../components/Loading'
 import LoadingOverlay from '../../components/LoadingOverlay';
 
+import { useScrollHook } from '../../customHooks/useScrollHook'
+
 const Editor = ({ history, match }) => {
      const { id } = match.params
-     const dispatch = useDispatch()
 
+     const dispatch = useDispatch()
+     
      const authUser = useSelector(selectAuthUser)
      const currentNote = useSelector(selectCurrentNote)
      const { currentNoteLoading, createNoteLoading, updateNoteLoading } = useSelector(selectNotesLoading)
@@ -25,12 +29,22 @@ const Editor = ({ history, match }) => {
      const { currentNoteError, updateNoteError } = useSelector(selectNotesErrors)
 
      const [text, setText] = React.useState('')
+     
+     const [scrollInfo, onScrollHandler] = useScrollHook()
+
+     useEffect(() => {
+          scrollInfo.scrolledDown? dispatch(showNavbar()) : dispatch(hideNavbar())
+     }, [scrollInfo.scrolledDown])
 
      useEffect(() => {
           if(id && !currentNote) dispatch(getCurrentNote(id))
 
           return () => dispatch(clearCurrentNote())
      }, [])
+
+     useEffect(() => {
+          if(!currentNote) dispatch(getCurrentNote(id))
+     }, [authUser.authenticated])
 
      useEffect(() => {
           if(currentNote) setText(currentNote.note)
@@ -90,14 +104,30 @@ const Editor = ({ history, match }) => {
           Please sign in first.
      </Box>)
 
+     
+     if(currentNoteError) return (
+          <Box 
+               p="4"
+               margin="auto"
+               mt="5"
+               color="red.400" 
+               bg="blackAlpha.300" 
+               width="80%"
+               maxWidth="500px"
+               borderRadius="10"
+               textAlign="center"
+          >
+               {currentNoteError.message}
+          </Box>
+     )
+
      return (
-          <div style={{ height: '100%', position: 'relative' }}>
+          <div className={`main-container${scrollInfo.scrolledDown? ' full-view' : ''}`}>
           {
                (createNoteLoading || updateNoteLoading) &&  <LoadingOverlay />
           }
-          <form style={{ height: '100%', position: 'relative'}}>
+          <form style={{ height: "100%"}}>
                <Textarea 
-                    className="scrollbar"
                     p="2"
                     color="whiteAlpha.800"
                     placeholder="Write something here"
@@ -109,10 +139,11 @@ const Editor = ({ history, match }) => {
                     value={text}
                     onChange={(e) => setText(e.target.value)}
                     disabled={createNoteLoading || updateNoteLoading}
+                    onScroll={onScrollHandler}
                     autoFocus
                     required
                />
-               <span className="floating-bottom-right">
+               <span className={`floating-bottom-right${scrollInfo.scrolledDown? ' hide-down' : ''}`}>
                     <IconButton
                          onClick={id? updateHandler : createHandler}
                          mb="3"

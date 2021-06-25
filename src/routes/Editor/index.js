@@ -105,7 +105,7 @@ const Editor = ({ history, match }) => {
      </Box>)
 
      
-     if(currentNoteError) return (
+     if(id && currentNoteError) return (
           <Box 
                p="4"
                margin="auto"
